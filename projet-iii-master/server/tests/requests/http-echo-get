@@ -1,0 +1,2 @@
+#!/bin/bash
+match "curl -s -X GET --fail localhost:8080/test/echo" "OK"

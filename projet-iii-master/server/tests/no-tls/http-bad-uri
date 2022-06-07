@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Invalid character '#'
+match 'echo -ne "GET /test/echo# HTTP1/1.1\r\n\r\n" | nc -N localhost 8080' "400"

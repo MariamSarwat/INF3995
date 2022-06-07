@@ -1,0 +1,162 @@
+version: '3'
+
+networks:
+  internal:
+
+services:
+
+  proxy:
+
+    # The official v2 Traefik docker image
+    image: traefik:v2.3
+
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.constraints=Label(`bixi.tag`, `${BIXI_TRAEFIK_TAG}`)"
+      - "--providers.file.filename=/traefik-dynamic.yml"
+      - "--providers.file.watch=true"
+      - "--log.level=${BIXI_TRAEFIK_LOG_LEVEL}"
+      - "--entrypoints.websecure.address=:443"
+
+    ports:
+      - "${BIXI_TRAEFIK_PORT}:443"
+#      - "8080:8080"
+
+    volumes:
+      # Make sure to use system time
+      - /etc/localtime:/etc/localtime:ro
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./certs:/certs:ro
+      - ./traefik-dynamic.yml:/traefik-dynamic.yml:ro
+
+    networks:
+      - internal
+
+
+  server:
+
+    build:
+      context: ./server
+      network: host
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.server.entrypoints=websecure"
+        - "traefik.http.routers.server.rule=PathPrefix(`/usager`, `/sondage`, `/status`)"
+        - "traefik.http.routers.server.tls=true"
+        - "bixi.tag=${BIXI_TRAEFIK_TAG}"
+
+    ports:
+      - target: 80
+        protocol: tcp
+        mode: host
+
+    networks:
+      internal:
+        aliases:
+          - bixi-server
+
+    image: bixi-server:v2.0
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./volumes/server/srv:/srv
+
+  engine_1:
+
+    build:
+      context: ./engines
+      dockerfile: Dockerfile
+      network: host
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.engine_1.entrypoints=websecure"
+        - "traefik.http.routers.engine_1.rule=PathPrefix(`/station`, `/logs/1`)"
+        - "traefik.http.routers.engine_1.tls=true"
+        - "bixi.tag=${BIXI_TRAEFIK_TAG}"
+
+    command: "1"
+
+    logging:
+      driver: journald
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./volumes/engines:/var/bixi-engines
+      - ./volumes/server/srv/www/auth:/srv/www/auth:ro
+      - /var/db/bixi:/var/db/bixi
+
+    ports:
+      - target: 80
+        protocol: tcp
+        mode: host
+
+    networks:
+       internal:
+         aliases:
+           - bixi-engine-1
+
+
+  engine_2:
+
+    build:
+      context: ./engines
+      dockerfile: Dockerfile
+      network: host
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.engine_2.entrypoints=websecure"
+        - "traefik.http.routers.engine_2.rule=PathPrefix(`/donnees/usage`, `/logs/2`)"
+        - "traefik.http.routers.engine_2.tls=true"
+        - "bixi.tag=${BIXI_TRAEFIK_TAG}"
+
+    command: "2"
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./volumes/engines:/var/bixi-engines
+      - ./volumes/server/srv/www/auth:/srv/www/auth:ro
+      - /var/db/bixi:/var/db/bixi
+
+    ports:
+      - target: 80
+        protocol: tcp
+        mode: host
+
+    networks:
+      internal:
+        aliases:
+          - bixi-engine-2
+
+
+  engine_3:
+
+    build:
+      context: ./engines
+      dockerfile: Dockerfile
+      network: host
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.engine_3.entrypoints=websecure"
+        - "traefik.http.routers.engine_3.rule=PathPrefix(`/prediction`, `/logs/3`)"
+        - "traefik.http.routers.engine_3.tls=true"
+        - "bixi.tag=${BIXI_TRAEFIK_TAG}"
+
+    command: "3"
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./volumes/engines:/var/bixi-engines
+      - ./volumes/server/srv/www/auth:/srv/www/auth:ro
+      - /var/db/bixi:/var/db/bixi
+
+    ports:
+      - target: 80
+        protocol: tcp
+        mode: host
+
+    networks:
+      internal:
+        aliases:
+          - bixi-engine-3

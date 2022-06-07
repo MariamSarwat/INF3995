@@ -1,0 +1,93 @@
+#!/bin/bash
+
+source mk/config.mk
+
+SERVER_PID=-1
+
+rm -rf ./test-results
+mkdir -p ./test-results/coverage
+mkdir -p ./test-results/srv/www/auth
+mkdir -p ./test-results/srv/www/poll
+echo -n "admin" >> ./test-results/srv/www/auth/admin
+
+WORK=./test-results/srv/www
+
+
+tester() {
+    tmp="$(mktemp)"
+    if (eval "$@") >& $tmp; then
+	perl -e 'printf "\033[30;102m[ OK ]\033[0m @ARGV\n"' "$@"
+    else
+	perl -e 'printf "\033[30;101m[FAIL]\033[0m @ARGV\n"' "$@"
+	printf ">>>>>>%s" "$(cat $tmp)"
+	echo "<<<<<<"
+    fi
+
+    rm -f $tmp
+}
+export -f tester
+
+match() {
+    tmp="$(mktemp)"
+    eval "$1 | tee $tmp"
+
+    grep -q -E "$2" $tmp
+
+    exit_code=$?
+
+    rm -rf $tmp
+
+    exit $exit_code
+}
+export -f match
+
+run_server() {
+    LD_PRELOAD="${CONFIG_BUILD_DIR}/bin/bixi-server-tests.so" \
+	      "${CONFIG_BUILD_DIR}/bin/bixi-server" $@ \
+	      >> ./test-results/server.txt 2>&1 &
+    SERVER_PID=$!
+}
+
+kill_server() {
+    if [ "$SERVER_PID" != "-1" ]; then
+	kill $SERVER_PID
+	wait $SERVER_PID
+	SERVER_PID=-1
+    fi
+}
+
+run_server_once() {
+    run_server $@ -wd $WORK
+    wait $!
+}
+
+run_server_once -help
+run_server_once -version
+
+REQUESTS=$(find ./tests/requests -type f)
+
+echo "Running no TLS tests"
+run_server -no-tls -port 8080 -wd $WORK
+NO_TLS_REQUESTS=$(find ./tests/no-tls -type f)
+echo -e -n "${NO_TLS_REQUESTS}\n${REQUESTS}" | parallel -j 0 tester | tee ./test-results/parallel.txt
+kill_server
+
+# Run with TLS
+export CURL_HOME=./tests
+echo "Running with TLS tests"
+run_server -port 8080 -cert ../certs/bixi-server.crt -key ../certs/bixi-server.key -wd $WORK
+
+echo -n "${REQUESTS}" | parallel -j 0 tester | tee -a ./test-results/parallel.txt
+kill_server
+
+gcovr \
+    -r . \
+    --print-summary \
+    --exclude-unreachable-branches \
+    --object-directory="${CONFIG_BUILD_DIR}" \
+    --print-summary \
+    --html-details \
+    --delete \
+    -o test-results/coverage/index.html
+
+exec awk '$0 ~ /FAIL/ { exit 1 } ' ./test-results/parallel.txt

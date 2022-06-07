@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Missing CRLF
+match 'echo -en "GET /test/echo HTTP/1.1\r\n" | nc -N localhost 8080' "400"

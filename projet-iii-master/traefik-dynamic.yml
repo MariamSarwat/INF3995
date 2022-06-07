@@ -1,0 +1,6 @@
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certs/bixi-server.crt
+        keyFile: /certs/bixi-server.key

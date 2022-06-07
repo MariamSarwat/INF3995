@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+import random
+import json
+
+candidates = [
+    {
+        "courriel": "foo@",
+        "prenom" : "foo",
+        "nom" : "foo",
+        "age" : 1,
+        "interet" : False
+    },
+    {
+        "courriel": "foo@",
+        "prenom" : "fuz",
+        "nom" : "fuz",
+        "age" : 2,
+        "interet" : True
+    },
+    {
+        "courriel": "foo@",
+        "prenom" : "fam",
+        "nom" : "fam",
+        "age" : 3,
+        "interet" : False
+    },
+    {
+        "courriel": "bar@",
+        "prenom" : "bar",
+        "nom" : "bar",
+        "age" : 1,
+        "interet" : False
+    },
+    {
+        "courriel": "bar@",
+        "prenom" : "buz",
+        "nom" : "buz",
+        "age" : 2,
+        "interet" : True
+    },
+    {
+        "courriel": "buz@",
+        "prenom" : "bam",
+        "nom" : "bam",
+        "age" : 3,
+        "interet" : False
+    },
+]
+
+random.shuffle(candidates)
+
+
+print(json.dumps(candidates.pop()))

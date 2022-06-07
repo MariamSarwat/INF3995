@@ -1,0 +1,10 @@
+#!/bin/sh
+
+export CURL_HOME=.
+
+AT=${BIXI_IP:-localhost:4430}
+
+for i in $(seq 100);
+do
+      curl -X PUT --data "$(./random-json)" "$AT/sondage" >/dev/null &
+done

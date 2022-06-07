@@ -1,0 +1,2 @@
+#!/bin/sh
+match "curl -u admin:admin -X PUT -s -w '%{http_code}' --data '{ \"new\" : \"admin\" }' localhost:8080/usager/motdepasse" "400"

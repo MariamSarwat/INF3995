@@ -1,0 +1,2 @@
+#!/bin/bash
+match 'curl -s -X PUT --data "{\"JSON\":\"FOO\"}" localhost:8080/test/echo' '{\\"JSON\\":\\"FOO\\"}'

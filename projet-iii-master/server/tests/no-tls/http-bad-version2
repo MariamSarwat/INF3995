@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Extra 1 after supported version
+match 'echo "GET /test/echo HTTP1/1.11\r\n\r\n" | nc -N -C localhost 8080' "400"

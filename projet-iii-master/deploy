@@ -1,0 +1,62 @@
+#!/bin/bash
+
+export CURL_HOME=.
+
+fail=0
+
+AT=${BIXI_IP:-localhost:4430}
+
+match() {
+    tmp="$(mktemp)"
+
+    echo -en "$1\t$2=>"
+
+    eval "$1" | tee "$tmp"
+
+    grep -q -E "$2" $tmp
+
+    if [ $? -ne 0 ]; then
+        fail=1
+    fi
+
+    rm -rf $tmp
+}
+
+echo "Running test @$AT"
+
+# Server
+match "curl -X POST -u admin:admin $AT/usager/login"                                                "401"
+match "curl -X POST -u admin:\"$(echo -n admin | sha256sum | awk '{printf $1}')\" $AT/usager/login" "200"
+match "curl -X GET  $AT/status"                                                                     "200"
+
+# Engine 1
+match "curl -X GET  $AT/station"                                            "200"
+match "curl -X GET  $AT/station/6403"                                       "200"
+match "curl -X GET  $AT/station/42014721479"                                "404"
+match "curl -X GET  $AT/station/foo"                                        "404"
+
+match "curl -X POST $AT/station/recherche"                                   "400"
+match "curl -X POST  --data '{\"chain\":\"jarry\"}'   $AT/station/recherche" "400"
+match "curl -X POST  --data '\"chaine\":\"jarry\"}'   $AT/station/recherche" "400"
+match "curl -X POST  --data '{\"chaine\":\"jarry\"}'  $AT/station/recherche" "200"
+match "curl -X POST  --data '{\"chaine\":\"foobar\"}' $AT/station/recherche" "404"
+
+# Engine 2
+
+match "curl $AT/donnees/usage/paranne" "400"
+match "curl $AT/donnees/usage/parmois" "200"
+
+match "curl $AT/donnees/usage/paranne/6114"   "400"
+match "curl $AT/donnees/usage/parmois/toto"   "400"
+match "curl $AT/donnees/usage/parmois/1"      "404"
+match "curl $AT/donnees/usage/parmois/6114"   "200"
+match "curl $AT/donnees/usage/parmois/toutes" "200"
+
+match "curl $AT/donnees/usage/paranne/6114/2017-05-30"   "400"
+match "curl $AT/donnees/usage/parmois/titi/2017-05-30"   "400"
+match "curl $AT/donnees/usage/parmois/6114/tyty"         "400"
+match "curl $AT/donnees/usage/parmois/6114/2017-05-30"   "200"
+match "curl $AT/donnees/usage/parmois/toutes/2017-05-30" "200"
+
+
+exit $fail

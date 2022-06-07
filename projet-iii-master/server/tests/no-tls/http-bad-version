@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Version 1.0 not supported
+match 'echo -ne "GET /test/echo HTTP1/1.0\r\n\r\n" | nc -N -C localhost 8080' "400"

@@ -1,0 +1,127 @@
+#!/usr/bin/env lua
+-- SPDX-License-Identifier: GPL-2.0-only
+--
+-- Copyright (c) 2020 Olivier Dion <olivier.dion@polymtl.ca>
+--
+-- tools/configurer -
+
+do
+
+   local C_table = {
+
+      number = function(name, value)
+	 return ("#define %s %s"):format(name, value)
+      end,
+
+      boolean = function(name, value)
+	 if value then
+	    return "#define " .. name
+	 end
+	 return "// #define " .. name
+      end,
+
+      string  = function(name, value)
+	 if #value == 1 then
+	    return ("#define %s '%s'"):format(name, value)
+	 end
+	 return ("#define %s \"%s\""):format(name, value)
+      end,
+
+      table = function(name, value)
+	 return type_to_C(name, value.c)
+      end,
+   }
+
+   function type_to_C(name, value)
+      local t = type(value)
+      local f = C_table[t]
+      if f then
+	 return f(name, value)
+      end
+      return nil
+   end
+end
+
+do
+   local MK_table = {
+
+      number = function(name, value)
+	 return ("%s=%s"):format(name, value)
+      end,
+
+      boolean = function(name, value)
+	 return ("%s=%s"):format(name, value and 1 or 0)
+      end,
+
+      table = function(name, value)
+	 return type_to_MK(name, value.mk)
+      end,
+   };
+
+   MK_table.string = MK_table.number
+
+   function type_to_MK(name, value)
+      local t = type(value)
+      local f = MK_table[t]
+      if f then
+	 return f(name, value)
+      end
+      return nil
+   end
+end
+
+do
+   local f    = assert(arg[1])
+   local env  = {
+
+      shell = function(cmd)
+	 local child = assert(io.popen(cmd),
+			      "Failed to execute command " .. cmd)
+	 local val = child:read("*a")
+	 if val == "true" then
+	    return true
+	 elseif val == "false" then
+	    return false
+	 elseif tonumber(val) then
+	    return tonumber(val)
+	 else
+	    return val
+	 end
+      end,
+
+      env = function(name)
+         return os.getenv(name)
+      end,
+
+      print = print,
+   }
+
+   local conf = assert(loadfile(f, "t", env))
+
+   conf() -- env <- configuration
+
+   local export_hooks = {
+      {"include/config.h", type_to_C},
+      {"mk/config.mk",     type_to_MK}
+   }
+
+   for _, hook in ipairs(export_hooks) do
+      hook[1] = assert(io.open(hook[1], "w"),
+		       "Failed to open " .. hook[1])
+   end
+
+   for name, value in pairs(env) do
+      local config_name = ("CONFIG_%s"):format(name:upper())
+
+      for _, hook in ipairs(export_hooks) do
+	 local tmp = hook[2](config_name, value)
+	 if tmp then
+	    hook[1]:write(tmp .. "\n")
+	 end
+      end
+   end
+
+   for _, hook in ipairs(export_hooks) do
+      hook[1]:close()
+   end
+end

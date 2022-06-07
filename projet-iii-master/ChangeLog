@@ -1,0 +1,37 @@
+2020-10-28 (Porcupine) v2.0
+	* Add traefik TLS encryption
+	* Add docker-compose
+	* Add docker-compose volumes
+	* Add TLS certificate generation script
+	* Add bixi-server polling
+	* Add bixi-server authentication
+	* Add bixi-server routes
+	* Add more bixi-server tests
+	* Make bixi-server more robust
+	* Add bixi-engine-{1,2,3}
+	* Add bixi-engine-{1,2} loggings
+	* Add bixi-engines  database
+	* Add bixi-android views
+	* Add bixi-android graphs
+	* Add bixi-android predictions
+	* Add bixi-android IP input
+	* Add bixi-admin views
+	* Add bixi-admin http communications
+	* Add CI deploy tests
+	* Add CI environment
+	* Allow CI to run on the same node as production
+
+2020-09-22 (Prototype) v1.0
+	* Add Gitlab CI
+	* Add bixi-ai random forest concept
+	* Add bixi-android initial APK
+	* Add bixi-android small GUI
+	* Add bixi-server docker image
+	* Add bixi-server REST API
+	* Add bixi-server TLS encryption
+	* Add bixi-server test framework
+	* Add bixi-server JSON parser
+	* Add bixi-server HTTP scanner
+	* Add bixi-server utilities
+	* Add bixi-server license
+	* Add bixi-server documentation

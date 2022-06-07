@@ -1,0 +1,2 @@
+#!/bin/sh
+match "curl -u admin:not-admin-passwd -X POST -s -w '%{http_code}' localhost:8080/usager/login" "401"

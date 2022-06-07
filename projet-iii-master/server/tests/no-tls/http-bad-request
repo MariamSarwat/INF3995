@@ -1,0 +1,4 @@
+#!/bin/bash
+
+match 'echo -ne "THIS IS NOT HTTP\r\n.\r\nQUIT\r\n" | nc -N localhost 8080' "400"
+tmp="$(mktemp)"

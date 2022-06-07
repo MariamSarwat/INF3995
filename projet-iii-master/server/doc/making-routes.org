@@ -1,0 +1,77 @@
+#+AUTHOR: Olivier Dion
+#+OPTIONS: ^:nil
+
+Making routes is trivial using the `REST_MAKE_URI` macro.  Indeed, by importing
+`core/rest.h`, you can then use this macro to define a new static route.
+
+In the following example, we create a route at `/my/route` with 3 methods.  The
+GET method can be access by anyone, because no authentication is required for
+it.  The POST and PUT method is requiring a user aunthentication, but the POST
+also require the authenticated user to be named `admin`.  Overall, we've build a
+new route using a declarative approach style and by keeping it decoupled from
+the rest of the base code.
+
+#+begin_src C
+  #include "core/rest.h"
+  #include "utils/http.h"
+  #include "utils/json.h"
+
+
+  static enum http_status my_post(const char *user, const struct json *req, struct json **pres)
+  {
+          (void)req;
+
+          struct json *res;
+          enum http_status status;
+
+          if (streq(usage, "admin")) {
+                  res    = json_string("greeting!");
+                  status = HTTP_OK;
+          } else {
+                  res    = json_string("nope!");
+                  status = HTTP_UNAUTHORIZED;
+          }
+
+          ,*pres = res;
+
+          return status;
+  }
+
+  static enum http_status my_get(const char *user, const struct json *req, struct json **pres)
+  {
+          (void)user;
+          (void)req;
+
+          *pres = json_string("Hello World!");
+
+          return HTTP_OK;
+  }
+
+  static enum http_status my_put(const char *user, const struct json *req, struct json **pres)
+  {
+          (void)pres;
+          (void)user;
+
+          struct json *some_field;
+
+          some_field =  json_dict_get(req, "some_field");
+
+          if (!some_field || !json_is_boolean(some_field)) {
+                  return HTTP_BAD_REQUEST;
+          }
+
+          if (json_to_boolean(some_field)) {
+                  return HTTP_OK;
+          } else {
+                  return HTTP_NO_CONTENT;
+          }
+  }
+
+  REST_MAKE_URI = {
+          .route   = "/my/route",
+          .get     = &my_get,
+          .post    = &my_post,
+          .put     = &my_get,
+          .options = REST_AUTH_PUT | REST_AUTH_POST
+  };
+#+end_src

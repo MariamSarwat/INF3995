@@ -1,0 +1,29 @@
+#!/bin/sh
+
+GOOD_1='{"courriel":"good1@mail.org", "prenom": "good", "nom": "", "age": 10, "interet": false}'
+GOOD_2='{"courriel":"good2@mail.org", "prenom": "good", "nom": "", "age": 10, "interet": false}'
+GOOD_2='{"courriel":"good3@mail.org", "prenom": "good", "nom": "", "age": 10, "interet": false}'
+
+BAD_AGE='{"courriel":"bad@mail.org", "prenom": "", "nom": "", "age": -10, "interet": false}'
+BAD_INTERET='{"courriel":"bad@mail.org", "prenom": "", "nom": "", "age": 10, "interet": null}'
+BAD_MAIL_REL='{"courriel":"../bad-mail-rel", "prenom": "", "nom": "", "age": 10, "interet": false}'
+BAD_MAIL_ABS='{"courriel":"/etc/bad-mail-abs", "prenom": "", "nom": "", "age": 10, "interet": true}'
+
+curl -X PUT -s --data "$GOOD_1" localhost:8080/sondage > /dev/null
+curl -X PUT -s --data "$BAD_AGE" localhost:8080/sondage > /dev/null
+curl -X PUT -s --data "$GOOD_2" localhost:8080/sondage > /dev/null
+curl -X PUT -s --data "$BAD_INTERET" localhost:8080/sondage > /dev/null
+curl -X PUT -s --data "$BAD_MAIL_REL" localhost:8080/sondage > /dev/null
+curl -X PUT -s --data "$BAD_MAIL_ABS" localhost:8080/sondage > /dev/null
+
+tmp="$(mktemp)"
+
+curl -u admin:admin -X GET -s localhost:8080/sondage | awk '{ print } $0 ~ /bad/ { ret = 1 } END { exit ret }'
+
+exit_code=$?
+
+if [ -f test-results/srv/www/bad-mail-rel ]; then
+    exit_code=1
+fi
+
+exit $exit_code
