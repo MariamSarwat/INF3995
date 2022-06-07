@@ -1,0 +1,23 @@
+<!--
+ PolyBixi Light Theme
+ Copyright (c) 2020 Jean-Olivier Dalphond <jean-olivier.dalphond@polymtl.ca>
+ -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.PolyBixi" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/bixi_red</item>
+        <item name="colorPrimaryVariant">@color/bixi_darkred</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/complementary_blue</item>
+        <item name="colorSecondaryVariant">@color/complementary_darkblue</item>
+        <item name="colorOnSecondary">@color/darkgrey</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="android:textColorHint">@color/darkgrey</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:navigationBarColor">?attr/colorPrimaryVariant</item>
+    </style>
+  </resources>

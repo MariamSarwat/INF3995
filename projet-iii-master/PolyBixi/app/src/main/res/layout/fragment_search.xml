@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Search Fragment Layout
+ Copyright (c) 2020 Samuel Charbonneau <samuel-3.charbonneau@polymtl.ca>
+ -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.polybixi.search.SearchViewModel"/>
+    </data>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".search.SearchFragment">
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <ProgressBar
+            android:id="@+id/statsProgressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/bixi_red"
+            android:mirrorForRtl="false"
+            android:nestedScrollingEnabled="false"
+            android:visibility="@{viewModel.requestCounter > 0 ? View.VISIBLE:View.GONE}"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/search_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="Search"
+                android:background="@{viewModel.searchFocus ? @drawable/search_box_focused : @drawable/search_box}"
+                android:hint="@string/searchBoxHint"
+                android:inputType="textPersonName"
+                android:maxLength="100"
+                android:onClick="@{() -> viewModel.setSearchBoxFocus()}"
+                android:padding="10dp"
+                android:text="@={viewModel.searchString}"
+                android:textSize="20sp"
+                android:textColor="@color/black"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/station_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@{@drawable/search_result}"
+                android:visibility="@{viewModel.searchFocus &amp;&amp; viewModel.searchString.length() >=1 ? View.VISIBLE:View.GONE}" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@{ @drawable/search_result}"
+                android:paddingStart="7dp"
+                android:paddingEnd="7dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/darkergrey"
+                android:text="@string/noStationFound"
+                android:visibility="@{viewModel.showNoResult ? View.VISIBLE:View.GONE}" />
+        </LinearLayout>
+    </FrameLayout>
+</layout>

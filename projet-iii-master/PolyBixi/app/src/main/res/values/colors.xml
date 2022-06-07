@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ PolyBixi Android App Colors
+ Copyright (c) 2020 Jean-Olivier Dalphond <jean-olivier.dalphond@polymtl.ca>
+ -->
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="bixi_red">#eb483c</color>
+    <color name="bixi_darkred">#A13131</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparentlightgrey">#81FFFFFF</color>
+    <color name="transparentgrey">#2AFFFFFF</color>
+    <color name="lightergrey">#EBEBEB</color>
+    <color name="lightgrey">#B3B3B3</color>
+    <color name="grey">#888888</color>
+    <color name="darkgrey">#656565</color>
+    <color name="darkergrey">#3C3C3C</color>
+    <color name="complementary_lightblue">#A5D1FF</color>
+    <color name="complementary_blue">#2687EB</color>
+    <color name="complementary_darkblue">#215F9E</color>
+    <color name="complementary_darkerblue">#13385E</color>
+</resources>

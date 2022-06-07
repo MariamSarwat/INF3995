@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Fragment Holder Layout (Navigation)
+ Copyright (c) 2020 Jean-Olivier Dalphond <jean-olivier.dalphond@polymtl.ca>
+ -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@+id/navigation_settings"
+    android:name="androidx.navigation.fragment.NavHostFragment">
+    <fragment
+        android:id="@+id/navigation_survey"
+        android:name="com.polybixi.survey.SurveyFragment"
+        android:label="@string/title_survey"
+        tools:layout="@layout/fragment_survey" >
+        <action
+            android:id="@+id/action_navigation_survey_to_navigation_search"
+            app:destination="@id/navigation_search" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.polybixi.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_navigation_search_to_navigation_stats"
+            app:destination="@id/navigation_stats" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_stats"
+        android:name="com.polybixi.stats.StatsFragment"
+        android:label="@string/title_stats"
+        tools:layout="@layout/fragment_stats">
+        <argument
+            android:name="stationCode"
+            app:argType="integer"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.polybixi.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_navigation_settings_to_navigation_survey"
+            app:destination="@id/navigation_survey" />
+    </fragment>
+</navigation>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Bottom Navigation Menu Layout
+ Copyright (c) 2020 Jean-Olivier Dalphond <jean-olivier.dalphond@polymtl.ca>
+ -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_survey"
+        android:icon="@drawable/ic_baseline_person_pin_24"
+        android:title="@string/title_survey" />
+
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="@string/title_search" />
+
+    <item
+        android:id="@+id/navigation_stats"
+        android:icon="@drawable/ic_baseline_bar_chart_24"
+        android:title="@string/title_stats" />
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/title_settings" />
+</menu>

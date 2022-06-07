@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Stats Fragment Layout
+ Copyright (c) 2020 Jean-Olivier Dalphond <jean-olivier.dalphond@polymtl.ca>
+ -->
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.polybixi.stats.StatsViewModel"/>
+    </data>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:stretchColumns="*"
+        android:shrinkColumns="*">
+            <ProgressBar
+                android:id="@+id/statsProgressBar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/bixi_red"
+                android:mirrorForRtl="false"
+                android:nestedScrollingEnabled="false"
+                android:visibility="@{viewModel.requestCounter > 0 ? View.VISIBLE:View.INVISIBLE}" />
+        <TableRow android:baselineAligned="true">
+            <RadioGroup
+                android:layout_weight="6"
+                android:layout_width="0dp"
+                android:id="@+id/statsRequestTypeRadioGroup"
+                android:checkedButton="@={viewModel.typeRadioValue}"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:textSize="16sp"
+                    android:id="@+id/statsRadioPrediction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/statsRadioPredictionLabel" />
+                <RadioButton
+                    android:textSize="16sp"
+                    android:id="@+id/statsRadioUsage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/statsRadioUsageLabel" />
+                <RadioButton
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/statsRadioError"
+                    android:text="@string/statsRadioErrorLabel"/>
+            </RadioGroup>
+            <TextView
+                android:textSize="18sp"
+                android:gravity="end|center_vertical"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/statsFormStationLabel"
+                android:visibility="@{statsRadioError.checked? View.INVISIBLE: View.VISIBLE}"
+                android:text="@string/stationCodeLabel" />
+            <CheckBox
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:textSize="20sp"
+                android:id="@+id/statsAllStations"
+                android:text="@string/statsAllStations"
+                android:visibility="@{statsRadioError.checked? View.INVISIBLE: View.VISIBLE}"
+                android:checked="@={viewModel.allStations}">
+            </CheckBox>
+            <EditText
+                android:textSize="20sp"
+                android:gravity="center_vertical"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:id="@+id/statsFormStationText"
+                android:background="@{viewModel.stationCodeValid? @drawable/et_edit_text_normal : @drawable/et_solid}"
+                android:hint="@string/stationCodeLabel"
+                android:maxLength="5"
+                android:importantForAutofill="no"
+                android:enabled="@{!viewModel.allStations}"
+                android:inputType="number"
+                android:labelFor="@id/statsFormStationLabel"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:visibility="@{statsRadioError.checked? View.INVISIBLE: View.VISIBLE}"
+                android:text="@={viewModel.stationCode}"/>
+        </TableRow>
+        <TableRow>
+            <RadioGroup
+                android:layout_weight="5"
+                android:id="@+id/statsRequestPeriodRadioGroup"
+                android:checkedButton="@={viewModel.periodRadioValue}"
+                android:orientation="horizontal"
+                android:visibility="@{statsRadioError.checked? View.INVISIBLE: View.VISIBLE}">
+                <RadioButton
+                    android:textSize="16sp"
+                    android:id="@+id/statsRadioMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/statsFormMonthLabel"
+                    android:enabled="@{statsRadioUsage.checked}"/>
+                <RadioButton
+                    android:textSize="16sp"
+                    android:id="@+id/statsRadioHour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/statsFormHourLabel" />
+                <RadioButton
+                    android:textSize="16sp"
+                    android:id="@+id/statsRadioWeekday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/statsFormWeekdayLabel" />
+                <RadioButton
+                    android:textSize="16sp"
+                    android:id="@+id/statsRadioDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/statsFormDayLabel"
+                    android:enabled="@{!statsRadioUsage.checked}"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/statsRadioTemperature"
+                    android:text="@string/statsFormTemperatureLabel"
+                    android:enabled="@{!statsRadioUsage.checked}"/>
+            </RadioGroup>
+            <Button
+                android:textSize="20sp"
+                android:layout_weight="5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="@{viewModel.requestCounter &lt; 1 &amp;&amp; viewModel.stationCodeValid}"
+                android:onClick="@{() -> viewModel.getData()}"
+                android:text="@string/surveySubmit" />
+        </TableRow>
+        <com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
+            android:id="@+id/chartView"
+            android:layout_marginTop="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.hasData ? View.VISIBLE:View.INVISIBLE}"/>
+    </TableLayout>
+</layout>

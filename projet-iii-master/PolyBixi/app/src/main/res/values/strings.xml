@@ -1,0 +1,63 @@
+<!--
+ PolyBixi Android App Strings
+ Copyright (c) 2020 Jean-Olivier Dalphond <jean-olivier.dalphond@polymtl.ca>
+ -->
+<resources>
+    <!-- MainActivity -->
+    <string name="app_name">PolyBixi</string>
+    <string name="title_search">Recherche</string>
+    <string name="title_stats">Statistiques</string>
+    <string name="title_survey">Sondage</string>
+    <string name="title_settings">Paramètres</string>
+
+    <!-- HTTP Activity (Prototype) -->
+    <string name="request_button">Send request</string>
+    <string name="serverAddress">172.105.99.131</string>
+    <string name="serverPort">443</string>
+    <string name="getRadioButton">GET</string>
+    <string name="putRadioButton">PUT</string>
+    <string name="postRadioButton">POST</string>
+    <string name="serverPath">Répertoire</string>
+
+    <!-- Search Fragment -->
+    <string name="searchBoxHint">Rechercher...</string>
+
+    <!-- Maps API Key -->
+    <string name="google_maps_key">AIzaSyA7cyCYjB0-m0UARjEE2RaEjx7W9pjAjbQ</string>
+
+    <!-- Survey Fragment -->
+    <string name="surveyFirstName">Prénom</string>
+    <string name="surveyLastName">Nom</string>
+    <string name="surveyEmail">Adresse courriel</string>
+    <string name="surveyAge">Âge</string>
+    <string name="surveyInterest">Je voudrais recevoir les infolettres de PolyBixi</string>
+    <string name="surveySubmit">Soumettre</string>
+    <string name="surveyFirstNameLabel">Prénom</string>
+    <string name="surveyLastNameLabel">Nom</string>
+    <string name="surveyAgeLabel">Âge</string>
+    <string name="surveyEmailLabel">Courriel</string>
+    <string name="afterSurveyText">Sondage déjà rempli. Merci d\'avoir participé!</string>
+    <string name="afterSurveyReset">Remplir de nouveau</string>
+    <string name="navigateToResearchButtonText">Chercher une station</string>
+
+    <!-- Settings Fragment -->
+    <string name="settingsAddressLabel">Adresse IPv4 du serveur</string>
+    <string name="settingsAddressText">IPv4</string>
+    <string name="settingsSave">Sauvegarder</string>
+    <string name="noStationFound">Aucune Station trouvée...</string>
+    <string name="settingsCopyrightText">&#169; 2020. Tous droits réservés. Application Android: Jean-Olivier Dalphond, Samuel Charbonneau. Serveur et déploiement: Olivier Dion. Engins de données: Samuel Charbonneau, Anastasiya Basanets.
+    Application PC et gestion de projet: Mariam Sarwat. GRAND MERCI à Jean-Philippe Toutant pour le logo.</string>
+
+    <!-- Stats Fragment -->
+    <string name="stationCodeLabel">Station :</string>
+    <string name="statsFormHourLabel">Heure</string>
+    <string name="statsFormMonthLabel">Mois</string>
+    <string name="statsFormWeekdayLabel">Jour de la semaine</string>
+    <string name="statsFormDayLabel">Jour</string>
+    <string name="statsFormTemperatureLabel">Température</string>
+    <string name="statsRadioPredictionLabel">Prédiction</string>
+    <string name="statsRadioErrorLabel">Erreur</string>
+    <string name="statsRadioUsageLabel">Historique</string>
+    <string name="statsAllStations">Toutes</string>
+    <string name="bixi_logo_description">Logo Bixi</string>
+</resources>
