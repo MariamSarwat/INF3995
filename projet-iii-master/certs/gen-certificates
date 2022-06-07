@@ -1,0 +1,6 @@
+#!/bin/bash
+openssl genrsa -out RootCA.key 4096
+openssl req -x509 -new -nodes -key RootCA.key -subj "/C=CA/ST=QC/O=Polymtl" -sha256 -days 1024 -out RootCA.crt
+openssl genrsa -out bixi-server.key 2048
+openssl req -new -sha256 -key bixi-server.key -extensions req_ext -config ./ssl.conf -out bixi-server.csr
+openssl x509 -req -in bixi-server.csr -CA RootCA.crt -CAkey RootCA.key -CAcreateserial -extensions req_ext -extfile ./ssl.conf -out bixi-server.crt -days 500 -sha256

@@ -1,0 +1,9 @@
+requests==2.24.0
+pandas==1.1.2
+matplotlib==3.3.2
+sklearn==0.0
+pydot==1.4.1
+numpy==1.19.2
+graphviz==0.14.2
+
+

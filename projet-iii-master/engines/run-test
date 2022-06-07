@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+PYLINT_OPTS="--reports=n --score=n --rcfile=.pylintrc"
+
+pylint $PYLINT_OPTS engine
+
+pylint $PYLINT_OPTS ./src/
+
+# python3 -m unittest .
+
+# if [ $? ]; then
+#     fail=1
+# fi
+
+exit 0
